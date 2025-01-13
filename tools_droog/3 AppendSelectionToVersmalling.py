@@ -18,4 +18,4 @@ if hasattr(desc, "FIDSet") and desc.FIDSet:  # Check if FIDSet is not empty
     arcpy.management.Append(inputs=laag_uitsnede, target=laag_versmalling, schema_type="NO_TEST")
     arcpy.AddMessage(f"Selected features van {laag_uitsnede} toegevoegd aan {laag_versmalling}.")
 else:
-    arcpy.AddMessage(f"Laag {laag_uitsnede} heeft geen selectie.")
+    arcpy.AddError(f"Laag {laag_uitsnede} heeft geen selectie. Selecteer eerst de features die je naar de versmalling laag wilt kopiëren.")
