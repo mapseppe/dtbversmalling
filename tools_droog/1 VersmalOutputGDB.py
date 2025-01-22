@@ -45,6 +45,10 @@ def checkDTBlayer(dtb_layer, dtb_layer_file):
     elif dtb_layer_name == 'DTB_OVERIGE_VLAKKEN':
         arcpy.AddMessage(f"Special versmalling procedure for DTB_OVERIGE_VLAKKEN")
         versmalOverigeVlakken(dtb_layer, dtb_layer_file, versmalgrens)
+    
+    elif dtb_layer_name == 'DTB_OVERIGE_LIJNEN':
+        arcpy.AddMessage(f"Special versmalling procedure for DTB_OVERIGE_LIJNEN")
+        versmalOverigeLijnen(dtb_layer, dtb_layer_file, versmalgrens)
         
     else:
         arcpy.AddMessage(f"Standard versmalling procedure for {dtb_layer}")
@@ -118,7 +122,45 @@ def versmalOverigeVlakken(dtb_layer, dtb_layer_file, versmalgrens):
                                                                                         "SUBSET_SELECTION")
         arcpy.AddMessage(f"Append duikers 'as a whole' to versmalling")
         fixMultiparts(dtb_layer, DTB_duikers_intersect_versmalgrens, versmaldgdb)
-
+        
+#Versmal DTB_OVERIGE_LIJNEN t.b.v. Duikerlijn uitzondering
+def versmalOverigeLijnen(dtb_layer, dtb_layer_file, versmalgrens):
+    DTB_no_duikers = arcpy.management.SelectLayerByAttribute(dtb_layer, 
+                                                                  "NEW_SELECTION",
+                                                                  '"TYPE" <> 21002')
+    no_duiker_count = int(arcpy.management.GetCount(DTB_no_duikers)[0])
+    
+    #ANDERE OVERIGE_LIJNEN AANWEZIG (NIET-DUIKERS)
+    if no_duiker_count > 0:
+        arcpy.AddMessage(f"Non-duikers present in OVERIGE LIJNEN")
+        #Versmal niet-duikers
+        DTB_no_duikers_clip = arcpy.analysis.Clip(DTB_no_duikers, versmalgrens, "in_memory\\no_duikers_clip")
+        arcpy.AddMessage(f"Clip all features, except for duikers")
+        #Voeg duikers toe in zijn geheel
+        DTB_only_duikers = arcpy.management.SelectLayerByAttribute(dtb_layer, 
+                                                                    "NEW_SELECTION",
+                                                                    '"TYPE" = 21002')
+        DTB_duiker_intersect_versmalgrens = arcpy.management.SelectLayerByLocation(DTB_only_duikers,
+                                                                                    "intersect",
+                                                                                    versmalgrens,
+                                                                                    None,
+                                                                                    "SUBSET_SELECTION")
+        arcpy.Append_management(DTB_duiker_intersect_versmalgrens, DTB_no_duikers_clip, "NO_TEST")
+        arcpy.AddMessage(f"Append duikers 'as a whole' to versmalling")
+        DTB_OV_ready = DTB_no_duikers_clip
+        fixMultiparts(dtb_layer, DTB_OV_ready, versmaldgdb)
+        
+    #ALLEEN DUIKERS IN OVERIGE_LIJNEN AANWEZIG
+    if no_duiker_count == 0:
+        arcpy.AddMessage(f"Only duikers present in OVERIGE LIJNEN")
+        DTB_duikers_intersect_versmalgrens = arcpy.management.SelectLayerByLocation(dtb_layer,
+                                                                                        "intersect",
+                                                                                        versmalgrens,
+                                                                                        None,
+                                                                                        "SUBSET_SELECTION")
+        arcpy.AddMessage(f"Append duikers 'as a whole' to versmalling")
+        fixMultiparts(dtb_layer, DTB_duikers_intersect_versmalgrens, versmaldgdb)
+        
 #Fix multiparts en dubbele DTB_ID's
 def fixMultiparts(dtb_layer, dtb_vermalde_layer, versmaldgdb):
     versmald_path = fr"{versmaldgdb}\DTB_DATA\{dtb_layer}"
