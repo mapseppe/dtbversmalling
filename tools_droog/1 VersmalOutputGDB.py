@@ -66,7 +66,7 @@ def versmalDTBlayer(dtb_layer, dtb_layer_file, versmalgrens):
 def versmalScheidingLijnen(dtb_layer, dtb_layer_file, versmalgrens, uitsnedeAOI):
     dtb_layer_clip = arcpy.analysis.Clip(dtb_layer_file, versmalgrens, f"in_memory\\{dtb_layer}_clip")
     grens_vertices = arcpy.management.FeatureVerticesToPoints(versmalgrens, "in_memory\\grens_vertices")
-    split_dtb_layer = arcpy.management.SplitLineAtPoint(dtb_layer_clip, grens_vertices, "in_memory\\dtb_lijn_split", 0)
+    split_dtb_layer = arcpy.management.SplitLineAtPoint(dtb_layer_clip, grens_vertices, "in_memory\\dtb_lijn_split", 0.001)
     segment_grens_overlap = arcpy.management.SelectLayerByLocation(split_dtb_layer,
                                                                    "SHARE_A_LINE_SEGMENT_WITH",
                                                                    versmalgrens,
