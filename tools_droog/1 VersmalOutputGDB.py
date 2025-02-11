@@ -134,7 +134,7 @@ def versmalOverigeLijnen(dtb_layer, dtb_layer_file, versmalgrens):
     if no_duiker_count > 0:
         arcpy.AddMessage(f"Non-duikers present in OVERIGE LIJNEN")
         #Versmal niet-duikers
-        DTB_no_duikers_clip = arcpy.analysis.Clip(DTB_no_duikers, versmalgrens, "in_memory\\no_duikers_clip")
+        DTB_no_duikers_clip = arcpy.analysis.Clip(DTB_no_duikers, versmalgrens, "in_memory\\no_dfds_clip")
         arcpy.AddMessage(f"Clip all features, except for duikers")
         #Voeg duikers toe in zijn geheel
         DTB_only_duikers = arcpy.management.SelectLayerByAttribute(dtb_layer, 
