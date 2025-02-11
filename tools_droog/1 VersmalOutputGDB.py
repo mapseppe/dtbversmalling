@@ -62,13 +62,13 @@ def versmalEmptyLayer(dtb_layer, dtb_layer_file, versmaldgdb):
 
 #Versmal standaard layer
 def versmalDTBlayer(dtb_layer, dtb_layer_file, versmalgrens):
-    dtb_layer_clip = arcpy.analysis.Clip(dtb_layer_file, versmalgrens, f"in_memory\\{dtb_layer}_clip")
+    dtb_layer_clip = arcpy.analysis.PairwiseClip(dtb_layer_file, versmalgrens, f"in_memory\\{dtb_layer}_clip")
     arcpy.AddMessage(f"Clip layer to versmalgrens")
     fixMultiparts(dtb_layer, dtb_layer_clip, versmaldgdb)
 
 #Versmal DTB_SCHEIDING_LIJNEN
 def versmalScheidingLijnen(dtb_layer, dtb_layer_file, versmalgrens, uitsnedeAOI):
-    dtb_layer_clip = arcpy.analysis.Clip(dtb_layer_file, versmalgrens, f"in_memory\\{dtb_layer}_clip")
+    dtb_layer_clip = arcpy.analysis.PairwiseClip(dtb_layer_file, versmalgrens, f"in_memory\\{dtb_layer}_clip")
     grens_vertices = arcpy.management.FeatureVerticesToPoints(versmalgrens, "in_memory\\grens_vertices")
     split_dtb_layer = arcpy.management.SplitLineAtPoint(dtb_layer_clip, grens_vertices, "in_memory\\dtb_lijn_split", 0.001)
     segment_grens_overlap = arcpy.management.SelectLayerByLocation(split_dtb_layer,
@@ -96,7 +96,7 @@ def versmalOverigeVlakken(dtb_layer, dtb_layer_file, versmalgrens):
     if no_duiker_count > 0:
         arcpy.AddMessage(f"Non-duikers present in OVERIGE VLAKKEN")
         #Versmal niet-duikers
-        DTB_no_duikers_clip = arcpy.analysis.Clip(DTB_no_duikers, versmalgrens, "in_memory\\no_duikers_clip")
+        DTB_no_duikers_clip = arcpy.analysis.PairwiseClip(DTB_no_duikers, versmalgrens, "in_memory\\no_duikers_clip")
         arcpy.AddMessage(f"Clip all features, except for duikers")
         #Voeg duikers toe in zijn geheel
         DTB_only_duikers = arcpy.management.SelectLayerByAttribute(dtb_layer, 
@@ -134,7 +134,7 @@ def versmalOverigeLijnen(dtb_layer, dtb_layer_file, versmalgrens):
     if no_duiker_count > 0:
         arcpy.AddMessage(f"Non-duikers present in OVERIGE LIJNEN")
         #Versmal niet-duikers
-        DTB_no_duikers_clip = arcpy.analysis.Clip(DTB_no_duikers, versmalgrens, "in_memory\\no_dfds_clip")
+        DTB_no_duikers_clip = arcpy.analysis.PairwiseClip(DTB_no_duikers, versmalgrens, "in_memory\\no_dfds_clip")
         arcpy.AddMessage(f"Clip all features, except for duikers")
         #Voeg duikers toe in zijn geheel
         DTB_only_duikers = arcpy.management.SelectLayerByAttribute(dtb_layer, 
