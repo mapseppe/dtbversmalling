@@ -15,13 +15,13 @@ regio_kg_points = arcpy.GetParameterAsText(3) #Configure this input parameter da
 regio_kg_lines = arcpy.GetParameterAsText(4) #Configure this input parameter datatype as: Feature Class
 regio_kg_polygons = arcpy.GetParameterAsText(5) #Configure this input parameter datatype as: Feature Class
     #Output layer Parameters - configure these as datatype=FeatureLayer Derived Output
-usv_output = arcpy.GetParameterAsText(12)
-cpb_output = arcpy.GetParameterAsText(11)
+usv_output = arcpy.GetParameterAsText(6)
+cpb_output = arcpy.GetParameterAsText(7)
 kgp_output = arcpy.GetParameterAsText(8)
 kgl_output = arcpy.GetParameterAsText(9)
 kgv_output = arcpy.GetParameterAsText(10)
-aoi_output = arcpy.GetParameterAsText(6)
-vgs_output = arcpy.GetParameterAsText(7)
+aoi_output = arcpy.GetParameterAsText(11)
+vgs_output = arcpy.GetParameterAsText(12)
 
 arcpy.AddMessage(f"Starting create-workspace script with:")
 arcpy.AddMessage(f"Main Folder = {mainfolder}")
@@ -97,12 +97,12 @@ def createWorkspace(mainfolder, versmalgrens, outputgdb, regio_kg_points, regio_
     arcpy.AddMessage(f"Adding layers to arcgis project")
     arcproject = arcpy.mp.ArcGISProject("CURRENT")
     arcmap = arcproject.activeMap
-    arcpy.SetParameter(11, rf"{outputgdb}\DTB_ADMIN\AOI")
-    arcpy.SetParameter(12, rf"{productsgdb}\versmalgrens_kopie")
+    arcpy.SetParameter(6, rf"{outputgdb}\DTB_ADMIN\AOI")
+    arcpy.SetParameter(7, rf"{productsgdb}\versmalgrens_kopie")
     arcpy.SetParameter(8, rf"{productsgdb}\kg_points_buiten_grens")
     arcpy.SetParameter(9, rf"{productsgdb}\kg_lines_buiten_grens")
     arcpy.SetParameter(10, rf"{productsgdb}\kg_polygons_buiten_grens")
-    arcpy.SetParameter(6, rf"{productsgdb}\unsnapped_vertices")
-    arcpy.SetParameter(7, rf"{productsgdb}\crossed_polygons_borders")
+    arcpy.SetParameter(11, rf"{productsgdb}\unsnapped_vertices")
+    arcpy.SetParameter(12, rf"{productsgdb}\crossed_polygons_borders")
 
 createWorkspace(mainfolder, versmalgrens, outputgdb, regio_kg_points, regio_kg_lines, regio_kg_polygons)
