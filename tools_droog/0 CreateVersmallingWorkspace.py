@@ -54,7 +54,8 @@ def createWorkspace(mainfolder, versmalgrens, outputgdb, regio_kg_points, regio_
     versmalgrens_copy = arcpy.management.CopyFeatures(versmalgrens, rf"{productsgdb}\versmalgrens_kopie")
     
     #Analyse versmalgrens
-    dtb_lyr_path = r"M:\Geo\GDR-publicatie\layerbieb\Topografie\dtb.lyr"
+    #dtb_lyr_path = r"M:\Geo\GDR-publicatie\layerbieb\Topografie\dtb.lyr"
+    dtb_lyr_path = r"\\ad.rws.nl\p-dfs01\appsdata\Geo\GDR-publicatie\layerbieb\Topografie\dtb.lyr"
     dtb_lyr = arcpy.mp.LayerFile(dtb_lyr_path)
     dtb_lijn = dtb_lyr.listLayers("dtb_lijn")[0]
     dtb_vlak = dtb_lyr.listLayers("dtb_vlak_uitgebreid")[0]
