@@ -1,4 +1,5 @@
 import arcpy
+import arcpy.analysis
 
 #Environment
 arcpy.env.overwriteOutput = True
@@ -64,7 +65,14 @@ def createNewOG(versmalgrens, dtb_vlak_uitgebreid, uitsnedeAOI, scheiding_lijnen
                                                                     "in_memory\\new_opnamegrens_sp")
     arcpy.AddMessage(f"Multipart to Singlepart grens polyline")
     
-    new_opnamegrens = grens_polyline_clip_sp
+    ksms = arcpy.management.SelectLayerByAttribute(scheiding_lijnen_layer, 
+                                            "NEW_SELECTION",
+                                            '"TYPE" = 21114')
+    splitpoints = arcpy.analysis.Intersect([grens_polyline_clip_sp, ksms], "in_memory\\splitpoints", output_type="POINT")
+    grens_split_on_ksms = arcpy.management.SplitLineAtPoint(grens_polyline_clip_sp, splitpoints, "in_memory\\grens_line_split", 0.001)
+    arcpy.AddMessage(f"Splitting grens polyline by KSMS")
+    
+    new_opnamegrens = grens_split_on_ksms
     arcpy.management.AddField(new_opnamegrens, field_name="TYPE", field_type="LONG")
     arcpy.AddMessage(f"Added field 'TYPE' to new OG")
     arcpy.management.CalculateField(new_opnamegrens, field="TYPE", expression="21117")

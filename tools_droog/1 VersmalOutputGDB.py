@@ -31,7 +31,7 @@ def iterateDTBlayers(outputgdb):
 def checkDTBlayer(dtb_layer, dtb_layer_file):
     #Check layer name
     dtb_layer_name = dtb_layer
-    dtb_layer_count = int(arcpy.GetCount_management(dtb_layer_name)[0])
+    dtb_layer_count = int(arcpy.management.GetCount(dtb_layer_file)[0])
     
     #Activate versmalmethode liggend aan welke DTB layer het is
     if dtb_layer_count == 0:
